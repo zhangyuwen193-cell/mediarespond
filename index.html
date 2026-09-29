@@ -1,275 +1,69 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-  <base target="_top">
   <meta charset="UTF-8">
-const APPS_SCRIPT_URL = = 'https://script.google.com/macros/s/AKfycbycuKkKpKXbqe002tGLYjNSEQzpGx8i0cGdZ74NEENg8ny0sL7nG2JsDu4e7AZC1ygU/exec';
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>小組評分與回饋查詢</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      background: #f3f5fb;
-      color: #25324a;
-      font-family: system-ui, -apple-system, "Microsoft JhengHei", sans-serif;
-    }
-
-    main {
-      width: min(900px, 100%);
-      margin: auto;
-      padding: 40px 20px 60px;
-    }
-
-    header {
-      margin-bottom: 26px;
-    }
-
-    .eyebrow {
-      color: #635bdb;
-      font-size: 14px;
-      font-weight: 700;
-      letter-spacing: 2px;
-    }
-
-    h1 {
-      margin: 10px 0;
-      font-size: clamp(26px, 5vw, 36px);
-    }
-
-    .description {
-      margin: 0;
-      color: #69758b;
-      line-height: 1.8;
-    }
-
-    .search-panel {
-      padding: 24px;
-      background: white;
-      border: 1px solid #e4e8f2;
-      border-radius: 20px;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 10px;
-      font-weight: 700;
-    }
-
-    .search-row {
-      display: flex;
-      gap: 12px;
-    }
-
-    input {
-      flex: 1;
-      min-width: 0;
-      padding: 14px 16px;
-      border: 1px solid #cfd6e5;
-      border-radius: 12px;
-      font: inherit;
-      font-size: 17px;
-    }
-
-    input:focus {
-      outline: 3px solid #e5e2ff;
-      border-color: #7065e8;
-    }
-
-    button {
-      padding: 14px 24px;
-      border: none;
-      border-radius: 12px;
-      background: #6255d9;
-      color: white;
-      font: inherit;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background: #5144c7;
-    }
-
-    button:disabled {
-      opacity: 0.6;
-      cursor: wait;
-    }
-
-    .hint {
-      margin: 12px 0 0;
-      color: #758098;
-      font-size: 13px;
-      line-height: 1.7;
-    }
-
-    #status {
-      margin: 18px 2px;
-      color: #69758b;
-      line-height: 1.7;
-    }
-
-    #status.error {
-      color: #b42318;
-    }
-
-    .summary {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 16px;
-      margin: 22px 0;
-    }
-
-    .metric {
-      padding: 24px;
-      background: white;
-      border: 1px solid #e4e8f2;
-      border-radius: 18px;
-    }
-
-    .metric-label {
-      color: #69758b;
-      font-size: 14px;
-    }
-
-    .metric-value {
-      margin-top: 8px;
-      color: #5144c7;
-      font-size: 38px;
-      font-weight: 800;
-    }
-
-    .metric-note {
-      margin-top: 6px;
-      color: #758098;
-      font-size: 12px;
-    }
-
-    h2 {
-      margin: 28px 0 16px;
-      font-size: 22px;
-    }
-
-    .feedback-card {
-      margin-bottom: 16px;
-      padding: 22px;
-      background: white;
-      border: 1px solid #e4e8f2;
-      border-radius: 18px;
-    }
-
-    .card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .group-tag {
-      padding: 6px 12px;
-      border-radius: 30px;
-      background: #eeebff;
-      color: #5b4cce;
-      font-size: 14px;
-      font-weight: 700;
-    }
-
-    .score {
-      color: #5144c7;
-      font-weight: 700;
-    }
-
-    .topic {
-      margin-top: 16px;
-      font-weight: 700;
-      overflow-wrap: anywhere;
-    }
-
-    .feedback-text {
-      margin: 16px 0;
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
-      line-height: 1.9;
-    }
-
-    .time {
-      color: #8b94a6;
-      font-size: 12px;
-    }
-
-    .empty {
-      padding: 40px 20px;
-      border: 1px dashed #cfd6e5;
-      border-radius: 18px;
-      text-align: center;
-      color: #758098;
-      line-height: 1.8;
-    }
-
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #f3f5fb; color: #25324a; font-family: system-ui, -apple-system, "Microsoft JhengHei", sans-serif; }
+    main { width: min(900px, 100%); margin: auto; padding: 40px 20px 60px; }
+    header { margin-bottom: 26px; }
+    .eyebrow { color: #635bdb; font-size: 14px; font-weight: 700; letter-spacing: 2px; }
+    h1 { margin: 10px 0; font-size: clamp(26px, 5vw, 36px); }
+    .description { margin: 0; color: #69758b; line-height: 1.8; }
+    .search-panel { padding: 24px; background: #fff; border: 1px solid #e4e8f2; border-radius: 20px; }
+    label { display: block; margin-bottom: 10px; font-weight: 700; }
+    .search-row { display: flex; gap: 12px; }
+    input { flex: 1; min-width: 0; padding: 14px 16px; border: 1px solid #cfd6e5; border-radius: 12px; font: inherit; font-size: 17px; }
+    input:focus { outline: 3px solid #e5e2ff; border-color: #7065e8; }
+    button { padding: 14px 24px; border: 0; border-radius: 12px; background: #6255d9; color: #fff; font: inherit; font-weight: 700; cursor: pointer; }
+    button:hover { background: #5144c7; }
+    button:disabled { opacity: .6; cursor: wait; }
+    .hint { margin: 12px 0 0; color: #758098; font-size: 13px; line-height: 1.7; }
+    #status { margin: 18px 2px; color: #69758b; line-height: 1.7; }
+    #status.error { color: #b42318; }
+    .summary { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin: 22px 0; }
+    .metric, .feedback-card { background: #fff; border: 1px solid #e4e8f2; border-radius: 18px; }
+    .metric { padding: 24px; }
+    .metric-label { color: #69758b; font-size: 14px; }
+    .metric-value { margin-top: 8px; color: #5144c7; font-size: 38px; font-weight: 800; }
+    .metric-note { margin-top: 6px; color: #758098; font-size: 12px; }
+    h2 { margin: 28px 0 16px; font-size: 22px; }
+    .feedback-card { margin-bottom: 16px; padding: 22px; }
+    .card-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+    .group-tag { padding: 6px 12px; border-radius: 30px; background: #eeebff; color: #5b4cce; font-size: 14px; font-weight: 700; }
+    .score { color: #5144c7; font-weight: 700; }
+    .topic { margin-top: 16px; font-weight: 700; overflow-wrap: anywhere; }
+    .feedback-text { margin: 16px 0; white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.9; }
+    .time { color: #8b94a6; font-size: 12px; }
+    .empty { padding: 40px 20px; border: 1px dashed #cfd6e5; border-radius: 18px; text-align: center; color: #758098; line-height: 1.8; }
     @media (max-width: 550px) {
-      main {
-        padding: 28px 14px 40px;
-      }
-
-      .search-panel {
-        padding: 18px;
-      }
-
-      .search-row {
-        flex-direction: column;
-      }
-
-      .summary {
-        gap: 10px;
-      }
-
-      .metric {
-        padding: 18px;
-      }
-
-      .metric-value {
-        font-size: 32px;
-      }
+      main { padding: 28px 14px 40px; }
+      .search-panel { padding: 18px; }
+      .search-row { flex-direction: column; }
+      .summary { gap: 10px; }
+      .metric { padding: 18px; }
+      .metric-value { font-size: 32px; }
     }
   </style>
 </head>
-
 <body>
   <main>
     <header>
       <div class="eyebrow">PEER FEEDBACK</div>
       <h1>小組評分與回饋</h1>
-      <p class="description">
-        輸入當週報告組別，查看其他組給你們的評分與回饋。
-      </p>
+      <p class="description">輸入當週報告組別，查看收到的評分與回饋。</p>
     </header>
 
     <form id="searchForm" class="search-panel">
       <label for="groupInput">當週報告組別</label>
-
       <div class="search-row">
-        <input
-          id="groupInput"
-          type="text"
-          list="groupOptions"
-          placeholder="例如：A"
-          autocomplete="off"
-          maxlength="30"
-          required
-        >
-
+        <input id="groupInput" type="text" list="groupOptions" placeholder="例如：A" autocomplete="off" maxlength="30" required>
         <datalist id="groupOptions"></datalist>
-
-        <button id="searchButton" type="submit">
-          查詢回饋
-        </button>
+        <button id="searchButton" type="submit">查詢回饋</button>
       </div>
-
-      <p class="hint">
-        可輸入 A、B、C 等組別。平均分數以其他組填寫的數字評分計算。
-      </p>
+      <p class="hint">可輸入 A、B、C 等組別。</p>
     </form>
 
     <div id="status" role="status" aria-live="polite"></div>
@@ -277,57 +71,87 @@ const APPS_SCRIPT_URL = = 'https://script.google.com/macros/s/AKfycbycuKkKpKXbqe
   </main>
 
   <script>
+    // 貼上 Apps Script「管理部署作業」中複製的 /exec 網址。
+    // 網址必須是 /macros/s/.../exec，中間不能有 /u/2/。
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbycuKkKpKXbqe002tGLYjNSEQzpGx8i0cGdZ74NEENg8ny0sL7nG2JsDu4e7AZC1ygU/exec';
+
     const form = document.getElementById('searchForm');
     const groupInput = document.getElementById('groupInput');
     const searchButton = document.getElementById('searchButton');
     const statusBox = document.getElementById('status');
     const results = document.getElementById('results');
 
-    // 載入試算表中已有的報告組別，作為輸入提示
-    google.script.run
-      .withSuccessHandler(groups => {
-        const options = document.getElementById('groupOptions');
+    if (!APPS_SCRIPT_URL.startsWith('https://script.google.com/macros/s/')) {
+      showStatus('請先在 index.html 填入正確的 Apps Script /exec 網址。', true);
+    } else {
+      loadGroups();
+    }
 
+    form.addEventListener('submit', async event => {
+      event.preventDefault();
+      const group = groupInput.value.trim();
+      if (!group) return;
+
+      setLoading(true);
+      results.replaceChildren();
+      showStatus('正在讀取最新評分與回饋…');
+
+      try {
+        const data = await callApi('feedback', { group });
+        renderResults(data);
+      } catch (error) {
+        showStatus(error.message || '查詢失敗，請稍後再試。', true);
+      } finally {
+        setLoading(false);
+      }
+    });
+
+    async function loadGroups() {
+      try {
+        const groups = await callApi('groups');
+        const options = document.getElementById('groupOptions');
         groups.forEach(group => {
           const option = document.createElement('option');
           option.value = group;
           options.appendChild(option);
         });
-      })
-      .withFailureHandler(error => {
+      } catch (error) {
         showStatus(error.message || '無法載入組別。', true);
-      })
-      .getReportGroups();
+      }
+    }
 
-    form.addEventListener('submit', event => {
-      event.preventDefault();
+    function callApi(action, params = {}) {
+      return new Promise((resolve, reject) => {
+        const callback = '__feedback_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+        const script = document.createElement('script');
+        const query = new URLSearchParams({ action, ...params, callback, _: Date.now() });
+        const timer = setTimeout(() => finish(new Error('連線逾時，請稍後再試。')), 15000);
 
-      const group = groupInput.value.trim();
-      if (!group) return;
+        function finish(error, value) {
+          clearTimeout(timer);
+          delete window[callback];
+          script.remove();
+          error ? reject(error) : resolve(value);
+        }
 
-      searchButton.disabled = true;
-      groupInput.disabled = true;
-      searchButton.textContent = '查詢中…';
+        window[callback] = payload => {
+          if (!payload || payload.ok !== true) {
+            finish(new Error(payload && payload.error ? payload.error : '資料格式錯誤。'));
+            return;
+          }
+          finish(null, payload.data);
+        };
 
-      results.replaceChildren();
-      showStatus('正在讀取最新評分與回饋…');
+        script.onerror = () => finish(new Error('無法連接 Apps Script，請檢查部署權限與網址。'));
+        script.src = APPS_SCRIPT_URL + '?' + query.toString();
+        document.head.appendChild(script);
+      });
+    }
 
-      google.script.run
-        .withSuccessHandler(data => {
-          resetButton();
-          renderResults(data);
-        })
-        .withFailureHandler(error => {
-          resetButton();
-          showStatus(error.message || '查詢失敗，請稍後再試。', true);
-        })
-        .getGroupFeedback(group);
-    });
-
-    function resetButton() {
-      searchButton.disabled = false;
-      groupInput.disabled = false;
-      searchButton.textContent = '查詢回饋';
+    function setLoading(loading) {
+      searchButton.disabled = loading;
+      groupInput.disabled = loading;
+      searchButton.textContent = loading ? '查詢中…' : '查詢回饋';
     }
 
     function showStatus(message, isError = false) {
@@ -335,108 +159,50 @@ const APPS_SCRIPT_URL = = 'https://script.google.com/macros/s/AKfycbycuKkKpKXbqe
       statusBox.className = isError ? 'error' : '';
     }
 
-    // 所有試算表文字都用 textContent 顯示
     function createElement(tag, className, text) {
       const element = document.createElement(tag);
-
       if (className) element.className = className;
       if (text !== undefined) element.textContent = text;
-
       return element;
     }
 
     function createMetric(label, value, note) {
       const card = createElement('div', 'metric');
-
       card.appendChild(createElement('div', 'metric-label', label));
       card.appendChild(createElement('div', 'metric-value', value));
-
-      if (note) {
-        card.appendChild(createElement('div', 'metric-note', note));
-      }
-
+      if (note) card.appendChild(createElement('div', 'metric-note', note));
       return card;
     }
 
     function renderResults(data) {
       results.replaceChildren();
+      showStatus(`${data.group} 組｜共收到 ${data.count} 份回饋`);
 
-      showStatus(
-        `${data.group} 組｜共收到 ${data.count} 份其他組的回饋`
-      );
-
-      if (data.count === 0) {
-        results.appendChild(
-          createElement(
-            'div',
-            'empty',
-            '目前沒有這一組收到的回饋，請確認組別是否正確，或稍後再查詢。'
-          )
-        );
+      if (!data.count) {
+        results.appendChild(createElement('div', 'empty', '目前沒有這一組收到的回饋，請確認組別是否正確。'));
         return;
       }
 
       const summary = createElement('div', 'summary');
-
-      summary.appendChild(
-        createMetric(
-          '平均分數',
-          data.average === null ? '—' : data.average.toFixed(2),
-          `共 ${data.scoredCount} 筆有效數字評分`
-        )
-      );
-
-      summary.appendChild(
-        createMetric(
-          '回饋份數',
-          String(data.count),
-          '已排除本組自己的評分'
-        )
-      );
-
+      summary.appendChild(createMetric(
+        '平均分數',
+        data.average === null ? '—' : Number(data.average).toFixed(2),
+        `共 ${data.scoredCount} 筆有效數字評分`
+      ));
+      summary.appendChild(createMetric('回饋份數', String(data.count), '依表單最新資料統計'));
       results.appendChild(summary);
-      results.appendChild(
-        createElement('h2', '', '逐筆評分與回饋')
-      );
+      results.appendChild(createElement('h2', '', '逐筆評分與回饋'));
 
       data.items.forEach((item, index) => {
         const card = createElement('article', 'feedback-card');
         const header = createElement('div', 'card-header');
-
-header.appendChild(
-  createElement('span', 'group-tag', `回饋 ${index + 1}`)
-);
-
-        header.appendChild(
-          createElement(
-            'span',
-            'score',
-            item.scoreText ? `評分：${item.scoreText}` : '未填評分'
-          )
-        );
-
+        header.appendChild(createElement('span', 'group-tag', `回饋 ${index + 1}`));
+        header.appendChild(createElement('span', 'score', item.scoreText ? `評分：${item.scoreText}` : '未填評分'));
         card.appendChild(header);
 
-        if (item.topic) {
-          card.appendChild(
-            createElement('div', 'topic', item.topic)
-          );
-        }
-
-        card.appendChild(
-          createElement(
-            'p',
-            'feedback-text',
-            item.feedback || '（未填寫文字回饋）'
-          )
-        );
-
-        if (item.time) {
-          card.appendChild(
-            createElement('div', 'time', item.time)
-          );
-        }
-
+        if (item.topic) card.appendChild(createElement('div', 'topic', item.topic));
+        card.appendChild(createElement('p', 'feedback-text', item.feedback || '（未填寫文字回饋）'));
+        if (item.time) card.appendChild(createElement('div', 'time', item.time));
         results.appendChild(card);
       });
     }
