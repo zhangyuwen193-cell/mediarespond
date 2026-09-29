@@ -120,32 +120,25 @@
       }
     }
 
-    function callApi(action, params = {}) {
-      return new Promise((resolve, reject) => {
-        const callback = '__feedback_' + Date.now() + '_' + Math.random().toString(36).slice(2);
-        const script = document.createElement('script');
-        const query = new URLSearchParams({ action, ...params, callback, _: Date.now() });
-        const timer = setTimeout(() => finish(new Error('連線逾時，請稍後再試。')), 15000);
-
-        function finish(error, value) {
-          clearTimeout(timer);
-          delete window[callback];
-          script.remove();
-          error ? reject(error) : resolve(value);
-        }
-
-        window[callback] = payload => {
-          if (!payload || payload.ok !== true) {
-            finish(new Error(payload && payload.error ? payload.error : '資料格式錯誤。'));
-            return;
-          }
-          finish(null, payload.data);
-        };
-
-        script.onerror = () => finish(new Error('無法連接 Apps Script，請檢查部署權限與網址。'));
-        script.src = APPS_SCRIPT_URL + '?' + query.toString();
-        document.head.appendChild(script);
+    async function callApi(action, params = {}) {
+      const query = new URLSearchParams({ action, ...params, _: Date.now() });
+      const response = await fetch(APPS_SCRIPT_URL + '?' + query.toString(), {
+        method: 'GET',
+        redirect: 'follow',
+        cache: 'no-store'
       });
+
+      if (!response.ok) {
+        throw new Error(`資料服務回應錯誤（${response.status}）。`);
+      }
+
+      const payload = await response.json();
+
+      if (!payload || payload.ok !== true) {
+        throw new Error(payload && payload.error ? payload.error : '資料格式錯誤。');
+      }
+
+      return payload.data;
     }
 
     function setLoading(loading) {
